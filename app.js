@@ -1,5 +1,6 @@
 const express = require("express");
 const mongoose = require('mongoose');
+const path = require('path');
 const app = express();
 // You can now delete our 'Hello World' route
 //app.get("/", (req, res) => res.send("Hello yo"));
@@ -27,3 +28,10 @@ app.use(passport.initialize());
 app.use("/api/users", users);
 app.use("/api/tweets", tweets);
 
+//tells our server to load the static build folder in production
+if (process.env.NODE_ENV === 'production') {
+  app.use(express.static('frontend/build'));
+  app.get('/', (req, res) => {
+    res.sendFile(path.resolve(__dirname, 'frontend', 'build', 'index.html'));
+  })
+}
